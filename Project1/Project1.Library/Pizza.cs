@@ -4,7 +4,15 @@ using System.Text;
 
 namespace Project1.Library
 {
-    class Pizza
+    public class Pizza
     {
+        private string Size { get; }
+        private List<string> Ingridients { get; }
+
+        public Pizza(string size, List<string> ingridients)
+        {
+            Size = size;
+            Ingridients = ingridients;
+        }
     }
 }
