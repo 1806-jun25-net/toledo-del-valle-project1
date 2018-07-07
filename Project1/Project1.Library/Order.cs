@@ -8,7 +8,7 @@ namespace Project1.Library
     {
         private Location Location { get; }
         private User User { get; }
-        private Pizza Pizza { get;  }
+        private Pizza Pizza { get; }
         private DateTime TimeOfOrder { get; }
 
         public Order(Location location, User user, Pizza pizza)
@@ -17,7 +17,7 @@ namespace Project1.Library
             User = user;
             Pizza = pizza;
             TimeOfOrder = DateTime.Now;
-        }        
+        }
 
         public string GetTimeOfOderString()
         {

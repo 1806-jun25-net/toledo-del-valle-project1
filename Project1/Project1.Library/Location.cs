@@ -20,12 +20,16 @@ namespace Project1.Library
             {"mushrooms" , 30 },
             { "dough", 100 }
         };
-        private Dictionary<User, List<Order>> OrderHistory;
+
+        private List<User> users;
         private string Address { get; }
 
         public void GetOrder(User user, List<Order> order)
         {
-            OrderHistory.Add(user, order);
         }
+
+        //    public bool UserExists(string firstName, string lastName)
+        //    {
+        //        if (
     }
 }

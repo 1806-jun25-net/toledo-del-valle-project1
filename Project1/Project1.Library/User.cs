@@ -6,20 +6,27 @@ namespace Project1.Library
 {
     public class User
     {
-        private string Name { get; set; }
-        private string LastName { get; set; }
-        private string Location { get; set; }
+        private string FirstName { get; set; } = "Rolando";
+        private string LastName { get; set; } = "Toledo";
+        private string LocationName { get; set; } = "PizzaStore1";
 
-        public User(string name, string lastName, string location)
+        public User()
         {
-            Name = name;
+        }
+
+        public User(string firstName, string lastName, string locationName)
+        {
+            FirstName = firstName;
             LastName = lastName;
-            Location = location;
+            LocationName = locationName;
         }
 
         public void PlaceOrder()
         {
         }
 
+        public static bool UserExists(string a, string b, User user) => (a == user.FirstName && b == user.LastName) ? true : false;
+
+        public static bool Equals(User a, User b) => (a.FirstName == b.FirstName && a.LastName == b.LastName) ? true : false;
     }
 }
