@@ -5,31 +5,45 @@ using System.Text;
 namespace Project1.Library
 {
     public class Location
-    {
-        private readonly Dictionary<string, int> Ingridients = new Dictionary<string, int>
-        {
-            // quantity of the ingridients is measured in servings
-            // ex. 1 small pizza will take 1 serving of dough, sauce and cheese
-            // but a large pizza will take 3 servings of each
-            { "sauce" , 150 },
-            { "cheese" , 150 },
-            { "pepperoni" , 80 },
-            { "ham" , 80 },
-            { "bacon" , 80 },
-            { "olives" , 30 },
-            {"mushrooms" , 30 },
-            { "dough", 100 }
-        };
+    {    
+        private string Name { get; }
+        private List<Order> OrderHistory;
+        private List<Topping> Toppings;
 
-        private List<User> users;
-        private string Address { get; }
-
-        public void GetOrder(User user, List<Order> order)
+        // Create a new location
+        public Location(string name)
         {
+            Name = name;
+            OrderHistory = new List<Order>();
+            Toppings = new List<Topping>();
+            StockIngridients();
         }
 
-        //    public bool UserExists(string firstName, string lastName)
-        //    {
-        //        if (
+        // Create existing location
+        public Location(string name, List<Order> orders, List<Topping> toppings)
+        {
+            Name = name;
+            OrderHistory = orders;
+            Toppings = toppings;
+        }        
+
+        //public void GetOrder(Order order)
+        //{
+        //}
+
+        private void StockIngridients()
+        {
+            Topping dough = new Topping("dough", 150, 5.00M);
+            Toppings.Add(dough);
+            Topping sauce = new Topping("sauce", 150, .99M);
+            Toppings.Add(sauce);
+            Topping cheese = new Topping("chees", 150, .99M);
+            Toppings.Add(cheese);
+            //Topping extraCheese = new Topping("extraChees", 150, .99M);
+            //Toppings.Add(cheese);
+            Topping pepperoni = new Topping("pepperoni", 150, .99M);
+            Toppings.Add(pepperoni);            
+        }
+        
     }
 }
