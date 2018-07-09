@@ -6,7 +6,11 @@ namespace Project1.Library
 {
     public class Location
     {    
-        private string Name { get; }
+        public string Name { get; }
+        public int Dough { get; set; }
+        public int Sauce { get; set; }
+        public int Cheese { get; set; }
+        public int Pepperoni { get; set; }
         private List<Order> OrderHistory;
         private List<Topping> Toppings;
 
@@ -15,21 +19,12 @@ namespace Project1.Library
         {
             Name = name;
             OrderHistory = new List<Order>();
-            Toppings = new List<Topping>();
+            Dough = 150;
+            Sauce = 150;
+            Cheese = 150;
+            Pepperoni = 150;
             StockIngridients();
         }
-
-        // Create existing location
-        public Location(string name, List<Order> orders, List<Topping> toppings)
-        {
-            Name = name;
-            OrderHistory = orders;
-            Toppings = toppings;
-        }        
-
-        //public void GetOrder(Order order)
-        //{
-        //}
 
         private void StockIngridients()
         {
@@ -39,11 +34,25 @@ namespace Project1.Library
             Toppings.Add(sauce);
             Topping cheese = new Topping("chees", 150, .99M);
             Toppings.Add(cheese);
-            //Topping extraCheese = new Topping("extraChees", 150, .99M);
-            //Toppings.Add(cheese);
             Topping pepperoni = new Topping("pepperoni", 150, .99M);
             Toppings.Add(pepperoni);            
         }
         
+        public decimal OrderPrice(Order order)
+        {
+            decimal price = 0;
+            foreach(var pizza in order.Pizza)
+            {
+                price += pizza.Size * 5.00M;
+                if (pizza.Sauce == true) { price += pizza.Size * .99M; }
+                if (pizza.Cheese == true)
+                {
+                    price += pizza.Size * .99M;
+                    if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+                }                
+                if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
+            }
+            return price;
+        }
     }
 }

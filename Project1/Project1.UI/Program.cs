@@ -32,22 +32,13 @@ namespace Project1.UI
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("Project1DB"));
 
             var repo = new Project1Repository(new Project1DBContext(optionsBuilder.Options));
-
-            // test code
-            //var users = repo.GetUsersWithLocationName();
-
-            //foreach (var item in users)
-            //{
-            //    Console.WriteLine($"First Name: {item.FirstName}" +
-            //        $"\nLast Name: {item.LastName}" +
-            //        $"\nLocation: {item.Location.LocationName}");
-            //}
-            //Console.ReadLine();
             //////////////////////////////////////////////////////////////////////////////////////
             string input;
+            List<Library.Pizza> pizzas = new List<Library.Pizza>();
             while (true)
             {
                 Console.WriteLine();
+                Console.WriteLine("\tMenu");
                 Console.WriteLine("1.\tMake order");
                 Console.WriteLine("2.\tManager options");
                 Console.WriteLine("3.\tExit");
@@ -56,7 +47,7 @@ namespace Project1.UI
                 input = Console.ReadLine();
                 if (input == "1") // make order
                 {
-                    string locName;
+                    string locName = "location1";
                     Console.Write("Enter your first name: ");
                     string firstName = Console.ReadLine();
                     Console.Write("Enter your last name: ");
@@ -71,30 +62,7 @@ namespace Project1.UI
                         Console.WriteLine($"Welcome back {firstName} {lastName}");
                         locName = repo.GetUserLocation(firstName, lastName);
                         Console.WriteLine($"Your ordering location is {locName}");
-                        while (true)
-                        {
-                            Console.Write($"Would you like to order from that location (Y/N): ");
-                            input = Console.ReadLine();
-                            if(input == "Y" || input == "y")
-                            {
-                                // test code
-                                //Console.WriteLine($"You want to order from {repo.GetUserLocation(firstName, lastName)}");
-                                //int dummy = repo.GetLocationId(repo.GetUserLocation(firstName, lastName));
-                                //Console.WriteLine($"The location id you're odering from is: {dummy}");
-                                Console.ReadLine();
-                                break;
-                            }
-                            else if(input == "N" || input == "n")
-                            {
-                                userEx = false;
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine();
-                                Console.WriteLine($"Invalid input \"{input}\".");
-                            }
-                        } // end order from the same location while
+                        userEx = GetYesNoInput("Would you like to order from that location? (Y/N): ");
                     }
                     // If it's a new user greet him 
                     else
@@ -135,7 +103,7 @@ namespace Project1.UI
                         int num;
                         while (true)
                         {
-                            Console.WriteLine("How many pizzas do you want to order? (12 pizzas max");
+                            Console.WriteLine("How many pizzas do you want to order? (12 pizzas max)");
                             input = Console.ReadLine();
                             if(int.TryParse(input, out num) == true)
                             {
@@ -152,13 +120,32 @@ namespace Project1.UI
                         }
                         else
                         {
-
+                            int size;
+                            if (num == 1)
+                            {
+                                size = PizzaSizeMenu();
+                                pizzas.Add(CreatePizza(size));
+                                break;
+                            }
+                            else {
+                                for (int i = 0; i < num; i++)
+                                {
+                                    Console.WriteLine($"Pizza #{i+1}");
+                                    size = PizzaSizeMenu();
+                                    pizzas.Add(CreatePizza(size));
+                                }
+                                break;
+                            }
                         }
                     } // end of pizza menu while
-                    //User newUser = new User(firstName, lastName, locName);
+                    
+                    User newUser = new User(firstName, lastName, locName);
+                    //Order newOrder = new Order(newUser, pizzas);
+                    
                     //Console.WriteLine(newUser.FirstName);
                     //Console.ReadLine();
-                }else if (input == "2")
+                }
+                else if (input == "2")
                 {
 
                 }else if (input == "3")
@@ -173,6 +160,7 @@ namespace Project1.UI
             }
         } // end main
         
+        // Displays all existing locations
         public static void DisplayLocations()
         {
             using (var db = new Project1DBContext())
@@ -180,6 +168,70 @@ namespace Project1.UI
                 foreach (var item in db.Locations)
                 {
                     Console.WriteLine(item.LocationName);
+                }
+            }
+        }
+
+        // Gets the size of the pizza from the user
+        public static int PizzaSizeMenu()
+        {
+            string input;
+            while (true)
+            {
+                Console.WriteLine("Choose the size of the pizza");
+                Console.WriteLine("1.\tSmall");
+                Console.WriteLine("2.\tMedium");
+                Console.WriteLine("3.\tLarge");
+                Console.Write("Enter option: ");
+                input = Console.ReadLine();
+                if (input == "1" || input == "2" || input == "3")
+                {
+                    return int.Parse(input);
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid input \"{input}\".");
+                }
+            }
+        }
+
+        // Gets the toppings the user wants and creates the pizza
+        public static Library.Pizza CreatePizza(int size)
+        {
+            bool sauce = false;
+            bool cheese = false;
+            bool exCheese = false;
+            bool pepperoni = false;
+            sauce = GetYesNoInput("Would you like sauce in your pizza? (Y/N) \n-> ");
+            cheese = GetYesNoInput("Would you like cheese in your pizza? (Y/N) \n-> ");
+            if (cheese == true)
+            {
+                exCheese = GetYesNoInput("Would you like extra cheese in your pizza ? (Y / N) \n-> ");
+            }
+            pepperoni = GetYesNoInput("Would you like pepperoni in your pizza? (Y/N) \n-> ");
+            return new Library.Pizza(size, sauce, cheese, exCheese, pepperoni);
+        }
+
+        // Gets yes or no input 
+        public static bool GetYesNoInput(string msg)
+        {
+            string input;
+            while (true)
+            {
+                Console.Write(msg);
+                input = Console.ReadLine();
+                if (input == "Y" || input == "y")
+                {
+                    return true;
+                }
+                else if (input == "N" || input == "n")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Invalid input \"{input}\".");
                 }
             }
         }

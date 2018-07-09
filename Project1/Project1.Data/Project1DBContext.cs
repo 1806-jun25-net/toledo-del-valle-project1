@@ -25,8 +25,6 @@ namespace Project1.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:toledo-del-valle-1806.database.windows.net,1433;Initial Catalog=Project1DB;Persist Security Info=False;User ID=rolov3;Password=Tequilas27;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -50,6 +48,8 @@ namespace Project1.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.LocationId).HasColumnName("LocationID");
+
+                entity.Property(e => e.OrderTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -119,7 +119,7 @@ namespace Project1.Data
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Users__LocationI__59FA5E80");
+                    .HasConstraintName("FK__Users__LocationI__5AEE82B9");
             });
         }
     }

@@ -6,10 +6,10 @@ namespace Project1.Library
 {
     public class Order
     {
-        private Location Location { get; }
-        private User User { get; }
-        private List<Pizza> Pizza { get; }
-        private DateTime TimeOfOrder { get; }
+        public Location Location { get; }
+        public User User { get; }
+        public List<Pizza> Pizza { get; }
+        public DateTime TimeOfOrder { get; }
 
         public Order(Location location, User user, List<Pizza> pizza)
         {

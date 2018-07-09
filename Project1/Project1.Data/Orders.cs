@@ -15,6 +15,7 @@ namespace Project1.Data
         public int? UserId { get; set; }
         public int? LocationId { get; set; }
         public int NumberOfPizzas { get; set; }
+        public DateTime OrderTime { get; set; }
 
         public Locations Location { get; set; }
         public Users User { get; set; }
