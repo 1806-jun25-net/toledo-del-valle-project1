@@ -6,17 +6,17 @@ namespace Project1.Library
 {
     public class Pizza
     {
-        public int Size { get; }
-        public bool Sauce { get; }
-        public bool Cheese { get; }
-        public bool ExtraCheese { get; }
-        public bool Pepperoni { get; }
+        public int Size { set; get; }
+        public bool Sauce { set; get; }
+        public bool Cheese { set; get; }
+        public bool ExtraCheese { set; get; }
+        public bool Pepperoni { set; get; }
 
         public Pizza(int size, bool sauce, bool cheese, bool extraCheese, bool pepperoni)
         {
             Size = size;
             Sauce = sauce;
-            Cheese = Cheese;
+            Cheese = cheese;
             ExtraCheese = extraCheese;
             Pepperoni = pepperoni;
         }

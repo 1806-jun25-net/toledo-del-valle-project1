@@ -6,17 +6,25 @@ namespace Project1.Library
 {
     public class Order
     {
-        public Location Location { get; }
-        public User User { get; }
-        public List<Pizza> Pizza { get; }
-        public DateTime TimeOfOrder { get; }
+        public string LocationName { set;  get; }
+        public User User { set;  get; }
+        public List<Pizza> Pizza { set;  get; }
+        public DateTime TimeOfOrder { set;  get; }
 
-        public Order(Location location, User user, List<Pizza> pizza)
+        public Order(string locationName, User user, List<Pizza> pizza)
         {
-            Location = location;
+            LocationName = locationName;
             User = user;
             Pizza = pizza;
             TimeOfOrder = DateTime.Now;
+        }
+
+        public Order(string locationName, User user, List<Pizza> pizza, DateTime time)
+        {
+            LocationName = locationName;
+            User = user;
+            Pizza = pizza;
+            TimeOfOrder = time;
         }
 
         public string GetTimeOfOderString()

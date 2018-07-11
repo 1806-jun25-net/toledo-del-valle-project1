@@ -7,7 +7,6 @@ namespace Project1.Data
     {
         public Orders()
         {
-            Pizza = new HashSet<Pizza>();
             PizzaOrders = new HashSet<PizzaOrders>();
         }
 
@@ -19,7 +18,6 @@ namespace Project1.Data
 
         public Locations Location { get; set; }
         public Users User { get; set; }
-        public ICollection<Pizza> Pizza { get; set; }
         public ICollection<PizzaOrders> PizzaOrders { get; set; }
     }
 }

@@ -25,6 +25,8 @@ namespace Project1.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:toledo-del-valle-1806.database.windows.net,1433;Initial Catalog=Project1DB;Persist Security Info=False;User ID=rolov3;Password=Tequilas27;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -69,13 +71,6 @@ namespace Project1.Data
                 entity.ToTable("Pizza", "Project1");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.Pizza)
-                    .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__Pizza__OrderID__52593CB8");
             });
 
             modelBuilder.Entity<PizzaOrders>(entity =>
