@@ -204,6 +204,18 @@ namespace Project1.Library
             return order;
         }
 
+        public List<Orders> GetAllOrdersEarliest()
+        {
+            var orders = _db.Orders.Include(x => x.Location).OrderBy(x => x.OrderTime).ToList();
+            return orders;
+        }
+
+        public List<Orders> GetAllOrdersLatest()
+        {
+            var orders = _db.Orders.Include(x => x.Location).OrderByDescending(x => x.OrderTime).ToList();
+            return orders;
+        }
+
         public void Save()
         {
             _db.SaveChanges();

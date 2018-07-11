@@ -48,12 +48,6 @@ namespace Project1.Library
             PepperoniQ = location.Pepperoni
         };
 
-        //public static Order Map(Data.Orders order, ) => new Order
-        //{
-        //    LocationName = Map(order.Location).Name,
-        //    User = Map(order.User),
-        //};
-
         public static Data.Orders Map(Order order , int userId, int locationId) => new Data.Orders
         {
             UserId = userId,

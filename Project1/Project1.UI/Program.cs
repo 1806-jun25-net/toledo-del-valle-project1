@@ -151,6 +151,7 @@ namespace Project1.UI
                             {
                                 Console.WriteLine($"Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
                             }
+                            Console.WriteLine();
                             I = GetYesNoInput("Would you like to order the same? (Y/N): ");
                             if(I == true)
                             {
@@ -166,6 +167,7 @@ namespace Project1.UI
                         {
                             while (true)
                             {
+                                Console.WriteLine();
                                 Console.Write("How many pizzas do you want to order? (12 pizzas max): ");
                                 input = Console.ReadLine();
                                 if (int.TryParse(input, out num) == true)
@@ -174,11 +176,13 @@ namespace Project1.UI
                                 }
                                 else
                                 {
+                                    Console.WriteLine();
                                     Console.WriteLine($"Invalid input \"{input}\".");
                                 }
                             }
                             if (num < 1 || num > 12)
                             {
+                                Console.WriteLine();
                                 Console.WriteLine($"Invalid input \"{input}\", please pick a number between 1 and 12.");
                             }
                             else
@@ -205,7 +209,7 @@ namespace Project1.UI
                         Console.WriteLine();
                         Console.WriteLine($"The total price of the order will be: ${orderPrice}");
                         Console.WriteLine();
-                        if(GetYesNoInput("Would you like to commit your order? (Y/N): "))
+                        if(GetYesNoInput("Would you like to send your order? (Y/N): "))
                         {
                             if (repo.UserExists(user.FirstName, user.LastName))
                             {
@@ -250,11 +254,10 @@ namespace Project1.UI
                         Console.WriteLine("2.\tDisplay user history");
                         Console.WriteLine("3.\tDisplay order history by earliest");
                         Console.WriteLine("4.\tDisplay order history by latest");
-                        Console.WriteLine("5.\tDisplay order history by cheapest");
-                        Console.WriteLine("6.\tDisplay order history by most expensive");
-                        Console.WriteLine("7.\tExit manager menu");
+                        Console.WriteLine("5.\tExit manager menu");
                         Console.Write("Enter menu option: ");
                         input = Console.ReadLine();
+                        Console.WriteLine();
                         if (input == "1")
                         {
                             IEnumerable<Users> ul = repo.GetUsersWithLocationName();
@@ -298,6 +301,7 @@ namespace Project1.UI
                                     List<Library.Pizza> pi = new List<Library.Pizza>();
                                     foreach (var item in orders)
                                     {
+                                        count = 0;
                                         Console.WriteLine($"Order #{count + 1} ID: {item.Id} | Location: {item.Location.LocationName} | Amount of pizzas: {item.NumberOfPizzas} | Order time: {item.OrderTime}");
                                         Console.WriteLine();
                                         Console.WriteLine($"\tPizzas in the order");
@@ -326,9 +330,27 @@ namespace Project1.UI
                         }
                         else if(input == "3")
                         {
-
+                            List<Orders> orders = repo.GetAllOrdersEarliest();
+                            foreach(var item in orders)
+                            {                                
+                                Console.WriteLine("ID: {0,3} | Location: {1,10} | Amount of pizzas: {2,3} | Order Time: {3}", item.Id, item.Location.LocationName, item.NumberOfPizzas, item.OrderTime);
+                                Console.WriteLine();
+                            }
+                            Console.WriteLine("Press enter to continue");
+                            Console.ReadLine();
                         }
-                        else if (input == "7")
+                        else if(input == "4")
+                        {
+                            List<Orders> orders = repo.GetAllOrdersLatest();
+                            foreach (var item in orders)
+                            {
+                                Console.WriteLine("ID: {0,3} | Location: {1,10} | Amount of pizzas: {2,3} | Order Time: {3}", item.Id, item.Location.LocationName, item.NumberOfPizzas, item.OrderTime);
+                                Console.WriteLine();
+                            }
+                            Console.WriteLine("Press enter to continue");
+                            Console.ReadLine();
+                        }
+                        else if (input == "5")
                         {
                             break;
                         }
@@ -341,7 +363,6 @@ namespace Project1.UI
                 }
                 else if (input == "3")
                 {
-
                     break;
                 }
                 else
