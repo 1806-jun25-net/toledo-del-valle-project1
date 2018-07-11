@@ -28,13 +28,21 @@ namespace Project1.Library
             return locations;
         }
 
+        public List<Orders> GetUserOrders(int userId)
+        {
+            var orders = _db.Orders.Where(x => x.UserId == userId).Include(m => m.Location).Include(n => n.User).ToList();
+            return orders;
+        }
+
+        public List<PizzaOrders> GetJunctions(int orderId)
+        {
+            var junctions = _db.PizzaOrders.Where(x => x.OrderId == orderId).Include(m => m.Pizza).ToList();
+            return junctions;
+        }
+        
         public int GetLocationId(string locationName)
         {
             var location = _db.Locations.FirstOrDefault(x => x.LocationName == locationName);
-            //if(location == null)
-            //{
-            //    throw new ArgumentException("no such location with that name", nameof(locationName));
-            //}
             return location.Id;
         }
 
@@ -125,11 +133,6 @@ namespace Project1.Library
         public void AddOrder(Order order, int userId, int locationId)
         {
             _db.Add(Mapper.Map(order, userId, locationId));
-        }
-
-        public void PizzaExists(Pizza pizza)
-        {
-
         }
 
         public List<int> AddPizzas(List<Pizza> pizzas)

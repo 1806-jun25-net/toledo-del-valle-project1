@@ -148,9 +148,9 @@ namespace Project1.UI
 
                     if ( loc.EnoughIngridients(order.Pizza)) {
                         decimal orderPrice = 0;
-                        orderPrice = loc.OrderPrice(order);
+                        orderPrice = Location.OrderPrice(order);
                         Console.WriteLine();
-                        Console.WriteLine($"The total price of the order will be: {orderPrice}");
+                        Console.WriteLine($"The total price of the order will be: ${orderPrice}");
                         Console.WriteLine();
                         if(GetYesNoInput("Would you like to commit your order? (Y/N): "))
                         {
@@ -176,6 +176,9 @@ namespace Project1.UI
                             }
                             repo.Save();
                             Console.WriteLine("Your order has been made");
+                            Console.WriteLine();
+                            Console.WriteLine("Press enter to continue");
+                            Console.ReadLine();
                         }
                     }
                     else
@@ -186,7 +189,98 @@ namespace Project1.UI
                 }
                 else if (input == "2")
                 {
-
+                    Console.Clear();
+                    while (true)
+                    {
+                        Console.WriteLine("\tManager Menu");
+                        Console.WriteLine("1.\tDisplay all users");
+                        Console.WriteLine("2.\tDisplay user history");
+                        Console.WriteLine("3.\tDisplay order history by earliest");
+                        Console.WriteLine("4.\tDisplay order history by latest");
+                        Console.WriteLine("5.\tDisplay order history by cheapest");
+                        Console.WriteLine("6.\tDisplay order history by most expensive");
+                        Console.WriteLine("7.\tExit manager menu");
+                        Console.Write("Enter menu option: ");
+                        input = Console.ReadLine();
+                        if (input == "1")
+                        {
+                            IEnumerable<Users> ul = repo.GetUsersWithLocationName();
+                            Console.WriteLine("-------------------------------------------------------------");
+                            Console.WriteLine("|{0,19}|{1,19}|{2,19}|", "First Name", "Last Name", "Default Location");
+                            Console.WriteLine("-------------------------------------------------------------");
+                            int count = 0;
+                            foreach (var item in ul)
+                            {
+                                count++;
+                                Console.WriteLine("|{0,19}|{1,19}|{2,19}|", item.FirstName, item.LastName, item.Location.LocationName);
+                                Console.WriteLine("-------------------------------------------------------------");
+                            }
+                            Console.ReadLine();
+                        }
+                        else if(input == "2")
+                        {
+                            string firstName;
+                            string lastName;
+                            int userId;
+                            bool userEx;
+                            while (true)
+                            {
+                                Console.Write("Enter the first name: ");
+                                firstName = Console.ReadLine();
+                                Console.WriteLine();
+                                Console.Write("Enter the last name: ");
+                                lastName = Console.ReadLine();
+                                Console.WriteLine();
+                                userEx = repo.UserExists(firstName, lastName);
+                                if (userEx)
+                                {
+                                    userId = repo.GetUserID(firstName, lastName);
+                                    List<Orders> orders = repo.GetUserOrders(userId);
+                                    List<List<PizzaOrders>> orderPizzas = new List<List<PizzaOrders>>();
+                                    foreach(var item in orders)
+                                    {
+                                        orderPizzas.Add(repo.GetJunctions(item.Id));
+                                    }
+                                    int count = 0;
+                                    List<Library.Pizza> pi = new List<Library.Pizza>();
+                                    foreach (var item in orders)
+                                    {
+                                        Console.WriteLine($"Order #{count + 1} ID: {item.Id} | Location: {item.Location.LocationName} | Amount of pizzas: {item.NumberOfPizzas} | Order time: {item.OrderTime}");
+                                        Console.WriteLine();
+                                        Console.WriteLine($"\tPizzas in the order");
+                                        Console.WriteLine();
+                                        foreach (var pizza in orderPizzas[count])
+                                        {
+                                            Console.WriteLine($"\tPizza #{count + 1} | Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
+                                            pi.Add(Mapper.Map(pizza.Pizza));
+                                        }
+                                        Console.WriteLine();
+                                        Console.WriteLine($"Order price: ${Location.OrderPrice(Mapper.Map(item, pi))}");
+                                        Console.WriteLine();
+                                        count++;
+                                    }
+                                    Console.WriteLine("Press enter to continue");
+                                    Console.ReadLine();
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine();
+                                    string bad = firstName + lastName;
+                                    Console.WriteLine($"User does not exist \"{bad}\".");
+                                }
+                            }
+                        }
+                        else if (input == "7")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"Invalid input \"{input}\".");
+                        }
+                    }
                 }
                 else if (input == "3")
                 {

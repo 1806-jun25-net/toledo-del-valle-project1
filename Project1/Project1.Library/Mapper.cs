@@ -62,6 +62,14 @@ namespace Project1.Library
             OrderTime = order.TimeOfOrder
         };
 
+        public static Order Map(Data.Orders order, List<Pizza> pizzas) => new Order
+        {
+            LocationName = order.Location.LocationName,
+            User = Map(order.User, order.User.Location.LocationName),
+            Pizza = pizzas,
+            TimeOfOrder = order.OrderTime
+        };
+
         public static Data.Pizza Map(Pizza pizza) => new Data.Pizza
         {
             Size = pizza.Size,
@@ -69,6 +77,15 @@ namespace Project1.Library
             Cheese = pizza.Cheese,
             ExtraCheese = pizza.ExtraCheese,
             Pepperoni = pizza.Pepperoni
+        };
+
+        public static Pizza Map(Data.Pizza pizza) => new Pizza
+        {
+            Size = pizza.Size,
+            Sauce = pizza.Souce ?? false,
+            Cheese = pizza.Cheese ?? false,
+            ExtraCheese = pizza.ExtraCheese ?? false,
+            Pepperoni = pizza.Pepperoni ?? false
         };
     }
 }

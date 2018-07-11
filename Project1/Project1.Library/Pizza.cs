@@ -12,6 +12,8 @@ namespace Project1.Library
         public bool ExtraCheese { set; get; }
         public bool Pepperoni { set; get; }
 
+        public Pizza() { }
+
         public Pizza(int size, bool sauce, bool cheese, bool extraCheese, bool pepperoni)
         {
             Size = size;

@@ -11,6 +11,8 @@ namespace Project1.Library
         public List<Pizza> Pizza { set;  get; }
         public DateTime TimeOfOrder { set;  get; }
 
+        public Order() { }
+
         public Order(string locationName, User user, List<Pizza> pizza)
         {
             LocationName = locationName;

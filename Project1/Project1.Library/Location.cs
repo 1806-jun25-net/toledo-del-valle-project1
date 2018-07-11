@@ -46,21 +46,36 @@ namespace Project1.Library
             Pepperoni = 150;
         }
         
-        public decimal OrderPrice(Order order)
+        public static decimal OrderPrice(Order order)
         {
             decimal price;
             price = 0;
             foreach(var pizza in order.Pizza)
             {
-                price += pizza.Size * 5.00M;
-                if (pizza.Sauce == true) { price += pizza.Size * .99M; }
+                price += pizza.Size * 10.00M;
+                if (pizza.Sauce == true) { price += pizza.Size * 1.99M; }
                 if (pizza.Cheese == true)
                 {
-                    price += pizza.Size * .99M;
-                    if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+                    price += pizza.Size * 1.99M;
+                    if (pizza.ExtraCheese == true) { price += pizza.Size * 1.99M; }
                 }                
-                if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
+                if (pizza.Pepperoni == true) { price += pizza.Size * 1.99M; }
             }
+            return price;
+        }
+
+        public static decimal PizzaPrice(Pizza pizza)
+        {
+            decimal price;
+            price = 0;
+            price += pizza.Size * 5.00M;
+            if (pizza.Sauce == true) { price += pizza.Size * .99M; }
+            if (pizza.Cheese == true)
+            {
+                price += pizza.Size * .99M;
+                if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+            }
+            if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
             return price;
         }
 
