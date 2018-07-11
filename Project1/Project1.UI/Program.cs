@@ -37,6 +37,7 @@ namespace Project1.UI
             string input;
             int uid;
             List<Library.Pizza> pizzas = new List<Library.Pizza>();
+            TimeSpan timeSpan;
             while (true)
             {
                 Console.WriteLine();
@@ -57,7 +58,7 @@ namespace Project1.UI
                     string lastName = Console.ReadLine();
                     // Use this to validate if user exists and if he wants to order from the same place
                     bool userEx = false;
-
+                    bool changeLocation = false;
                     // Check if user exists in the db
                     userEx = repo.UserExists(firstName, lastName);
                     // If he exists greet him and ask if he wants to order from the same location
@@ -70,8 +71,22 @@ namespace Project1.UI
                         locName = repo.GetUserLocation(firstName, lastName);
                         Console.WriteLine($"Your ordering location is {locName}");
                         Console.WriteLine();
-                        userEx = GetYesNoInput("Would you like to order from that location? (Y/N): ");
-                        Console.WriteLine();
+                        while (true)
+                        {
+                            changeLocation = GetYesNoInput("Would you like to order from that location? (Y/N): ");
+                            timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);
+                            if (timeSpan.Hours >= 2)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Your last order from this locations was {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds}");
+                                Console.WriteLine("Need to wait at least 2 hours to order from the same location");
+                                changeLocation = false;
+                                break;
+                            }
+                        }
                     }
                     // If it's a new user greet him 
                     else
@@ -79,7 +94,7 @@ namespace Project1.UI
                         Console.WriteLine($"Hi {firstName} {lastName}");
                     }
                     // New user or existing user decides from where they want to order
-                    if (!userEx)
+                    if (!changeLocation)
                     {
                         var locations = repo.GetLocations();
                         while (true)
@@ -92,12 +107,21 @@ namespace Project1.UI
                             DisplayLocations();
                             Console.Write("Enter menu option: ");
                             input = Console.ReadLine();
+                            Console.WriteLine();
                             // check if the input location exists
                             //userEx = repo.LocationExists(input);
                             if (repo.LocationExists(input))
                             {
                                 locName = input;
-                                break;
+                                timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);                                
+                                if (timeSpan.Hours >= 2) {
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Your last order from this locations was {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds}");
+                                    Console.WriteLine("Need to wait at least 2 hours to order from the same location");
+                                }
                             }
                             else
                             {
@@ -112,34 +136,63 @@ namespace Project1.UI
                     while (true)
                     {
                         int num;
-                        while (true)
+                        bool I = false;
+                        // Asks the user if he wants to make the same order as last time
+                        if (userEx)
                         {
-                            Console.Write("How many pizzas do you want to order? (12 pizzas max): ");
-                            input = Console.ReadLine();
-                            if (int.TryParse(input, out num) == true)
+                            Console.WriteLine();
+                            Console.WriteLine("Your last order ");
+                            Console.WriteLine();
+                            Orders o = repo.GetLastOrder(repo.GetUserID(firstName, lastName));
+                            List<Data.PizzaOrders> p = repo.GetJunctions(o.Id);
+                            Console.WriteLine($"ID: {o.Id} | Location: {o.Location.LocationName} | Amount of pizzas: {o.NumberOfPizzas} | Order time: {o.OrderTime}");
+                            Console.WriteLine();
+                            foreach (var pizza in p)
                             {
+                                Console.WriteLine($"Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
+                            }
+                            I = GetYesNoInput("Would you like to order the same? (Y/N): ");
+                            if(I == true)
+                            {
+                                foreach(var item in p)
+                                {
+                                    pizzas.Add(Mapper.Map(item.Pizza));
+                                }
                                 break;
+                            }
+                        }
+                        // If he wants to make a new order or if he is a new user
+                        if (I == false)
+                        {
+                            while (true)
+                            {
+                                Console.Write("How many pizzas do you want to order? (12 pizzas max): ");
+                                input = Console.ReadLine();
+                                if (int.TryParse(input, out num) == true)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Invalid input \"{input}\".");
+                                }
+                            }
+                            if (num < 1 || num > 12)
+                            {
+                                Console.WriteLine($"Invalid input \"{input}\", please pick a number between 1 and 12.");
                             }
                             else
                             {
-                                Console.WriteLine($"Invalid input \"{input}\".");
+                                int size;
+                                for (int i = 0; i < num; i++)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine($"Pizza #{i + 1}");
+                                    size = PizzaSizeMenu();
+                                    pizzas.Add(CreatePizza(size));
+                                }
+                                break;
                             }
-                        }
-                        if (num < 1 || num > 12)
-                        {
-                            Console.WriteLine($"Invalid input \"{input}\", please pick a number between 1 and 12.");
-                        }
-                        else
-                        {
-                            int size;
-                            for (int i = 0; i < num; i++)
-                            {
-                                Console.WriteLine();
-                                Console.WriteLine($"Pizza #{i + 1}");
-                                size = PizzaSizeMenu();
-                                pizzas.Add(CreatePizza(size));
-                            }
-                            break;
                         }
                     } // end of pizza menu while
                     Location loc = Mapper.Map(repo.GetLocation(locName));
@@ -271,6 +324,10 @@ namespace Project1.UI
                                 }
                             }
                         }
+                        else if(input == "3")
+                        {
+
+                        }
                         else if (input == "7")
                         {
                             break;
@@ -284,6 +341,7 @@ namespace Project1.UI
                 }
                 else if (input == "3")
                 {
+
                     break;
                 }
                 else

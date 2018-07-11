@@ -25,6 +25,8 @@ namespace Project1.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:toledo-del-valle-1806.database.windows.net,1433;Initial Catalog=Project1DB;Persist Security Info=False;User ID=rolov3;Password=Tequilas27;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 

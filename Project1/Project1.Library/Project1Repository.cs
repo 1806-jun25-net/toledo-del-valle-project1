@@ -78,6 +78,7 @@ namespace Project1.Library
             return user;
         }
 
+        // Gets the id of an user serched with the firstname lastname
         public int GetUserID(string firstName, string lastName)
         {
             var id = _db.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName).Id;
@@ -89,6 +90,7 @@ namespace Project1.Library
             return id;
         }
 
+        // Gets the location with the same name as the parameter
         public Locations GetLocation(string locationName)
         {
             var location = _db.Locations.FirstOrDefault(x => x.LocationName == locationName);
@@ -99,6 +101,7 @@ namespace Project1.Library
             return location;
         }
 
+        // Verifies that a location exists
         public bool LocationExists(string locationName)
         {
             var location = _db.Locations.FirstOrDefault(x => x.LocationName == locationName);
@@ -109,32 +112,38 @@ namespace Project1.Library
             return true;
         }
 
+        // Gets the id of an order
         public int GetOrderId(Order order)
         {
             var orderTime = _db.Orders.FirstOrDefault(x => DateTime.Compare(x.OrderTime,order.TimeOfOrder) == 0).Id;
             return orderTime;
         }
 
+        // Updates a user
         public void UpdateUser(User user)
         {
             _db.Entry(_db.Users.FirstOrDefault(x => x.FirstName == user.FirstName && x.LastName == user.LastName)).CurrentValues.SetValues(Mapper.Map(user, GetLocationId(user.LocationName), GetUserID(user.FirstName, user.LastName)));
         }
 
+        // Updates a location
         public void UpdateLocation(Location location)
         {
             _db.Entry(_db.Locations.FirstOrDefault(x => x.LocationName == location.Name)).CurrentValues.SetValues(Mapper.Map(location, GetLocationId(location.Name)));
         }
 
+        // Adds user to the db
         public void AddUser(User user)
         {            
             _db.Add(Mapper.Map(user, GetLocationId(user.LocationName)));
         }
 
+        // Adds order to the db
         public void AddOrder(Order order, int userId, int locationId)
         {
             _db.Add(Mapper.Map(order, userId, locationId));
         }
 
+        // Adds pizzas to the db
         public List<int> AddPizzas(List<Pizza> pizzas)
         {
             List<int> PizzaIds = new List<int>();
@@ -155,12 +164,14 @@ namespace Project1.Library
             return PizzaIds;
         }
 
+        // Gets the id of a pizza
         public int GetPizzaId(Pizza pizza)
         {
             var pizzaId = _db.Pizza.FirstOrDefault(x => x.Size == pizza.Size && x.Souce == pizza.Sauce && x.Cheese == pizza.Cheese && x.ExtraCheese == pizza.ExtraCheese && x.Pepperoni == pizza.Pepperoni).Id;
             return pizzaId;
         }
 
+        // Adds values to the junction table
         public void AddPizzaOrders(int orderId, int PizzaId)
         {
             PizzaOrders po = new PizzaOrders
@@ -169,6 +180,20 @@ namespace Project1.Library
                 PizzaId = PizzaId
             };
             _db.PizzaOrders.Add(po);
+        }
+
+        // Gets the last order of the user
+        public Orders GetLastOrder(int userId)
+        {
+            var order = _db.Orders.Include(x => x.Location).LastOrDefault(x => x.UserId == userId);
+            return order;
+        }
+
+        // Gets the last order from a specific location
+        public Orders GetLastOrderFromLocation(int userId, string location)
+        {
+            var order = _db.Orders.Include(x => x.Location).LastOrDefault(x => x.UserId == userId && x.Location.LocationName == location);
+            return order;
         }
 
         public void Save()
