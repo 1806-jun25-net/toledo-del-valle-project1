@@ -16,36 +16,42 @@ namespace Project1.Library
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
+        // Gets the users and the locations they're pointing to
         public IEnumerable<Users> GetUsersWithLocationName()
         {
             List<Users> users = _db.Users.Include(m => m.Location).AsNoTracking().ToList();
             return users;
         }
 
+        // Gets all the locations
         public IEnumerable<Locations> GetLocations()
         {
             List<Locations> locations = _db.Locations.AsNoTracking().ToList();
             return locations;
         }
 
+        // Gets all the orders of an user
         public List<Orders> GetUserOrders(int userId)
         {
             var orders = _db.Orders.Where(x => x.UserId == userId).Include(m => m.Location).Include(n => n.User).ToList();
             return orders;
         }
 
+        // Gets the id of all the pizzas in an order
         public List<PizzaOrders> GetJunctions(int orderId)
         {
             var junctions = _db.PizzaOrders.Where(x => x.OrderId == orderId).Include(m => m.Pizza).ToList();
             return junctions;
         }
         
+        // Gets the id of a location based on its name
         public int GetLocationId(string locationName)
         {
             var location = _db.Locations.FirstOrDefault(x => x.LocationName == locationName);
             return location.Id;
         }
 
+        // Gets the default location of an user
         public string GetUserLocation(string firstName, string lastName)
         {
             var user = _db.Users.Include(m => m.Location).FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
@@ -57,6 +63,7 @@ namespace Project1.Library
             return user.Location.LocationName;
         }
 
+        // Checks if an user exists 
         public bool UserExists(string firstName, string lastName)
         {
             var user = _db.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
@@ -67,6 +74,7 @@ namespace Project1.Library
             return true;
         }
 
+        // Gets the user searched by firstname lastname
         public Users GetUser(string firstName, string lastName)
         {
             var user = _db.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
