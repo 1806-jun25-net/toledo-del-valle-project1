@@ -246,9 +246,9 @@ namespace Project1.UI
                 }
                 else if (input == "2")
                 {
-                    Console.Clear();
                     while (true)
                     {
+                        Console.Clear();
                         Console.WriteLine("\tManager Menu");
                         Console.WriteLine("1.\tDisplay all users");
                         Console.WriteLine("2.\tDisplay user history");
@@ -310,6 +310,7 @@ namespace Project1.UI
                                         {
                                             Console.WriteLine($"\tPizza #{count + 1} | Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
                                             pi.Add(Mapper.Map(pizza.Pizza));
+                                            count++;
                                         }
                                         Console.WriteLine();
                                         Console.WriteLine($"Order price: ${Location.OrderPrice(Mapper.Map(item, pi))}");
