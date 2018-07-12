@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
+
 namespace Project1.UI
 {
     public class Program
@@ -54,6 +55,7 @@ namespace Project1.UI
                     Console.WriteLine();
                     Console.Write("Enter your first name: ");
                     string firstName = Console.ReadLine();
+                    Console.WriteLine();
                     Console.Write("Enter your last name: ");
                     string lastName = Console.ReadLine();
                     // Use this to validate if user exists and if he wants to order from the same place
@@ -74,18 +76,21 @@ namespace Project1.UI
                         while (true)
                         {
                             changeLocation = GetYesNoInput("Would you like to order from that location? (Y/N): ");
-                            timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);
-                            if (timeSpan.Hours >= 2)
+                            if (changeLocation == true)
                             {
-                                break;
-                            }
-                            else
-                            {
+                                timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);
+                                if (timeSpan.Hours >= 2)
+                                {
+                                    break;
+                                }
+                                Console.WriteLine();
                                 Console.WriteLine($"Your last order from this locations was {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds}");
+                                Console.WriteLine();
                                 Console.WriteLine("Need to wait at least 2 hours to order from the same location");
                                 changeLocation = false;
                                 break;
                             }
+                            break;
                         }
                     }
                     // If it's a new user greet him 
@@ -113,14 +118,24 @@ namespace Project1.UI
                             if (repo.LocationExists(input))
                             {
                                 locName = input;
-                                timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);                                
-                                if (timeSpan.Hours >= 2) {
-                                    break;
+                                if (repo.OrderedFromLocation(repo.GetUserID(firstName, lastName), locName))
+                                {
+                                    timeSpan = DateTime.Now.Subtract(repo.GetLastOrderFromLocation(repo.GetUserID(firstName, lastName), locName).OrderTime);
+                                    if (timeSpan.Hours >= 2)
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine($"Your last order from this locations was {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds}");
+                                        Console.WriteLine();
+                                        Console.WriteLine("Need to wait at least 2 hours to order from the same location");
+                                    }
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Your last order from this locations was {timeSpan.Hours} : {timeSpan.Minutes} : {timeSpan.Seconds}");
-                                    Console.WriteLine("Need to wait at least 2 hours to order from the same location");
+                                    break;
                                 }
                             }
                             else
@@ -203,7 +218,8 @@ namespace Project1.UI
                     User user = new User(firstName, lastName, locName);
                     Order order = new Order(loc.Name, user, pizzas);
 
-                    if ( loc.EnoughIngridients(order.Pizza)) {
+                    if ( loc.EnoughIngridients(order.Pizza))
+                    {
                         decimal orderPrice = 0;
                         orderPrice = Location.OrderPrice(order);
                         Console.WriteLine();
@@ -241,6 +257,8 @@ namespace Project1.UI
                     else
                     {
                         Console.WriteLine("Sorry, not enough ingridients to complete your order");
+                        Console.WriteLine("Press enter to continue");
+                        Console.ReadLine();
                     }
                     pizzas.Clear();
                 }
@@ -298,24 +316,28 @@ namespace Project1.UI
                                         orderPizzas.Add(repo.GetJunctions(item.Id));
                                     }
                                     int count = 0;
+                                    int count2 = 0;
+                                    int count3 = 0;
                                     List<Library.Pizza> pi = new List<Library.Pizza>();
                                     foreach (var item in orders)
-                                    {
-                                        count = 0;
+                                    {                                        
                                         Console.WriteLine($"Order #{count + 1} ID: {item.Id} | Location: {item.Location.LocationName} | Amount of pizzas: {item.NumberOfPizzas} | Order time: {item.OrderTime}");
                                         Console.WriteLine();
                                         Console.WriteLine($"\tPizzas in the order");
                                         Console.WriteLine();
-                                        foreach (var pizza in orderPizzas[count])
+                                        count3 = 0;
+                                        foreach (var pizza in orderPizzas[count2])
                                         {
-                                            Console.WriteLine($"\tPizza #{count + 1} | Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
+                                            Console.WriteLine($"\tPizza #{count3 + 1} | Size: {pizza.Pizza.Size} | Sauce: {pizza.Pizza.Souce} | Cheese: {pizza.Pizza.Cheese} | Extra Cheese: {pizza.Pizza.ExtraCheese} | Pepperoni: {pizza.Pizza.Pepperoni}");
                                             pi.Add(Mapper.Map(pizza.Pizza));
-                                            count++;
+                                            count3++;
                                         }
                                         Console.WriteLine();
                                         Console.WriteLine($"Order price: ${Location.OrderPrice(Mapper.Map(item, pi))}");
                                         Console.WriteLine();
                                         count++;
+                                        count2++;
+                                        pi.Clear();
                                     }
                                     Console.WriteLine("Press enter to continue");
                                     Console.ReadLine();

@@ -216,6 +216,16 @@ namespace Project1.Library
             return orders;
         }
 
+        public bool OrderedFromLocation(int userId, string location)
+        {
+            var order = _db.Orders.Include(x => x.Location).LastOrDefault(x => x.UserId == userId && x.Location.LocationName == location);
+            if(order == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public void Save()
         {
             _db.SaveChanges();
