@@ -62,7 +62,7 @@ namespace Project1.Library
             Pizza = pizzas,
             TimeOfOrder = order.OrderTime
         };
-
+        
         public static Data.Pizza Map(Pizza pizza) => new Data.Pizza
         {
             Size = pizza.Size,

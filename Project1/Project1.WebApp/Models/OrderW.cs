@@ -11,7 +11,8 @@ namespace Project1.WebApp.Models
         public string LocationName { get; set; }
         public UserW User { get; set; }
         public List<PizzaW> Pizzas { get; set; }
-        public DateTime TimeOfOrder { get; set; } = DateTime.Now;
+        public DateTime TimeOfOrder { get; set; }
+        public Decimal Price { get; set; }
 
         public static List<WebApp.Models.PizzaW> Map(List<Data.Pizza> pizzas)
         {

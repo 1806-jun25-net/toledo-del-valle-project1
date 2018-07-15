@@ -64,6 +64,24 @@ namespace Project1.Library
             return price;
         }
 
+        public static decimal OrderPrice(List<Data.Pizza> pizzas)
+        {
+            decimal price;
+            price = 0;
+            foreach (var pizza in pizzas)
+            {
+                price += pizza.Size * 5.00M;
+                if (pizza.Souce == true) { price += pizza.Size * .99M; }
+                if (pizza.Cheese == true)
+                {
+                    price += pizza.Size * .99M;
+                    if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+                }
+                if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
+            }
+            return price;
+        }
+
         public static decimal PizzaPrice(Pizza pizza)
         {
             decimal price;

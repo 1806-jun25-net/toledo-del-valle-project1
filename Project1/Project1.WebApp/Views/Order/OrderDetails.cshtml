@@ -8,6 +8,7 @@
 
 <h3>Customer Name: @Html.DisplayFor(modelItem => Model.User.FirstName) @Html.DisplayFor(modelItem => Model.User.LastName)</h3>
 <h3>Order Time: @Html.DisplayFor(modelItem => Model.TimeOfOrder) </h3>
+<h3>Price: $@Html.DisplayFor(modelItem => Model.Price) </h3>
 <h4>Pizzas in the order</h4>
 <table class="table">
     <thead>
@@ -33,23 +34,23 @@
     <tbody>
         @foreach (var item in Model.Pizzas)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Size)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sauce)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cheese)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ExtraCheese)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Pepperoni)
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sauce)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cheese)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExtraCheese)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pepperoni)
+            </td>
+        </tr>
         }
     </tbody>
 </table>

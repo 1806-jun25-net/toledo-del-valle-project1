@@ -35,4 +35,4 @@
     </tbody>
 </table>
 
-@Html.ActionLink("Back to User Options", "UserOptions", new { id = Model.First().User.Id })
+@Html.ActionLink("Back to User Options", "UserOptions", new { newOrder = Model.First().User.Id + "newOrder" })

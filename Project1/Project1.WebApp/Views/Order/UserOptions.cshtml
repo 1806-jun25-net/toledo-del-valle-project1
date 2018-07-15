@@ -1,4 +1,4 @@
-﻿@model Project1.WebApp.Models.UserW
+﻿@model Project1.WebApp.Models.OrderW
 
 @*@using Project1.WebApp.Models;*@
 
@@ -8,9 +8,9 @@
 
 <h2>User Options</h2>
 
-<h1>Welcome back @Html.DisplayFor(modelItem => Model.FirstName) @Html.DisplayFor(modelItem => Model.LastName)</h1>
-<p>Your default location for ordering is @Html.DisplayFor(modelItem => Model.DefaultLocation)</p>
-<p>@Html.ActionLink("Your Order History", "UserHistory", new { id = Model.Id })</p>
-<p>@Html.ActionLink("Make a new order", "NewOrder", new { id = Model.Id })</p>
+<h1>Welcome back @Html.DisplayFor(modelItem => Model.User.FirstName) @Html.DisplayFor(modelItem => Model.User.LastName)</h1>
+<p>Your default location for ordering is @Html.DisplayFor(modelItem => Model.User.DefaultLocation)</p>
+<p>@Html.ActionLink("Your Order History", "UserHistory", new { id = Model.User.Id })</p>
+<p>@Html.ActionLink("Make a new order", "NewOrder", new { newOrder = Model.User.Id + "newOrder" })</p> 
 
 

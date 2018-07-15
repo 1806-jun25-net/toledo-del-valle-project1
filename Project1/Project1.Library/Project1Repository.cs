@@ -77,7 +77,7 @@ namespace Project1.Library
         // Gets the user searched by firstname lastname
         public Users GetUser(string firstName, string lastName)
         {
-            var user = _db.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
+            var user = _db.Users.Include(x => x.Location).FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
             if (user == null)
             {
                 string name = firstName + " " + lastName;

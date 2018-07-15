@@ -1,0 +1,54 @@
+﻿@model Project1.WebApp.Models.PizzaW
+
+@{
+    ViewData["Title"] = "NewPizza";
+}
+
+<h2>New Pizza</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NewPizza">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input asp-for="Size" class="form-control" />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Sauce" /> @Html.DisplayNameFor(model => model.Sauce)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Cheese" /> @Html.DisplayNameFor(model => model.Cheese)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="ExtraCheese" /> @Html.DisplayNameFor(model => model.ExtraCheese)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Pepperoni" /> @Html.DisplayNameFor(model => model.Pepperoni)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+

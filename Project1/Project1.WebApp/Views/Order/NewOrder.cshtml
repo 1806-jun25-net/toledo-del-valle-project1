@@ -1,0 +1,88 @@
+﻿@model Project1.WebApp.Models.OrderW
+
+@{
+    ViewData["Title"] = "NewOrder";
+}
+
+<h2>New Order</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NewOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @*<label asp-for="DefaultLocation" class="control-label"></label>
+            <input asp-for="DefaultLocation" class="form-control" />
+            <span asp-validation-for="DefaultLocation" class="text-danger"></span>*@
+                <fieldset>
+                    Location
+                    <select id="Location" name="Location">
+                        <option value="location1">location1</option>
+                        <option value="location2">location2</option>
+                        <option value="location3">location3</option>
+                        <option value="location4">location4</option>
+                    </select>
+                </fieldset>
+            </div>
+            @if (Model.Pizzas.Count > 0)
+            {
+                <h4>Pizzas in the order</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Size
+                            </th>
+                            <th>
+                                Sauce
+                            </th>
+                            <th>
+                                Cheese
+                            </th>
+                            <th>
+                                Extra Cheese
+                            </th>
+                            <th>
+                                Pepperoni
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Pizzas)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Sauce)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Cheese)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExtraCheese)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Pepperoni)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @Html.ActionLink("Add pizza", "NewPizza")
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@Html.ActionLink("Back to User Options", "UserOptions", new { id = Model.User.Id })
+
+

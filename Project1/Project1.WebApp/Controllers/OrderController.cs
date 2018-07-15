@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 using Project1.Data;
 using Project1.Library;
 using Project1.WebApp.Models;
@@ -130,8 +132,23 @@ namespace Project1.WebApp.Controllers
                 }
                 else
                 {
+                    OrderW orderWeb = new OrderW
+                    {
+                        LocationName = user.Location.LocationName,
+                        User = new UserW
+                        {
+                            Id = user.Id,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            DefaultLocation = user.Location.LocationName
+                        },
+                        Pizzas = new List<PizzaW>()
+                    };
+                    string orderName = orderWeb.User.Id + "newOrder";
+                    TempData.Put("orderName", orderName);
+                    TempData.Put(orderName, orderWeb);
                     //return RedirectToAction("UserOptions", "Order", new { id = user.Id });
-                    return RedirectToAction(nameof(UserOptions), new { id = user.Id });
+                    return RedirectToAction(nameof(UserOptions), new { newOrder = orderWeb.User.Id + "newOrder" });
                 }
                 //return RedirectToAction(nameof(Index)); 
             }
@@ -141,17 +158,11 @@ namespace Project1.WebApp.Controllers
             }
         }
 
-        public ActionResult UserOptions(int id)
+        public ActionResult UserOptions(string newOrder)
         {
-            var user = Repo.GetUserById(id);
-            UserW userW = new UserW
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DefaultLocation = user.Location.LocationName
-            };
-            return View(userW);
+            var orderWeb = TempData.Get<OrderW>(newOrder);
+            TempData.Put(newOrder, orderWeb);
+            return View(orderWeb);
         }
 
         public ActionResult UserHistory(int id)
@@ -188,14 +199,62 @@ namespace Project1.WebApp.Controllers
                     LastName = order.User.LastName
                 },
                 Pizzas = OrderW.Map(Repo.GetPizzasFromOder(order.Id)),
-                TimeOfOrder = order.OrderTime
+                TimeOfOrder = order.OrderTime,
+                Price = Location.OrderPrice(Repo.GetPizzasFromOder(order.Id))
             };
             return View(orderWeb);
         }
 
-        public ActionResult NewOrder(int id)
+        public ActionResult NewOrder(string newOrder)
+        {
+            var orderWeb = TempData.Get<OrderW>(newOrder);
+            TempData.Put(newOrder, orderWeb);
+            return View(orderWeb);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewOrder(OrderW webOrder, IFormCollection collection)
+        {
+            var location = collection["Location"];
+            var orderName = TempData.Get<String>("orderNamen");
+            var orderWeb = TempData.Get<OrderW>(orderName);
+            orderWeb.LocationName = location;
+            return View();
+        }
+        
+        public ActionResult NewPizza()
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewPizza(PizzaW pizza)
+        {
+            var orderName = TempData.Get<String>("orderName");
+            var orderWeb = TempData.Get<OrderW>(orderName);
+            orderWeb.Pizzas.Add(pizza);
+            TempData.Put("orderName", orderName);
+            TempData.Put(orderName, orderWeb);
+            return RedirectToAction(nameof(NewOrder), new { newOrder = orderName });
+        }
+    }// end of Order Controller
+
+    // Used to store our objects in TempData
+    public static class TempDataExtensions
+    {
+        public static void Put<T>(this ITempDataDictionary tempData, string key, T value) where T : class
+        {
+            tempData[key] = JsonConvert.SerializeObject(value);
+        }
+
+        public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
+        {
+            object o;
+            tempData.TryGetValue(key, out o);
+            return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
+        }
     }
+
 }
