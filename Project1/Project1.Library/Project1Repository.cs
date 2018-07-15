@@ -226,6 +226,30 @@ namespace Project1.Library
             return true;
         }
 
+        public Users GetUserById(int Id)
+        {
+            var user = _db.Users.Include(x => x.Location).FirstOrDefault(x => x.Id == Id);
+            return user;
+        }
+
+        public List<Data.Pizza> GetPizzasFromOder(int orderId)
+        {
+            List<Data.Pizza> pizzas = new List<Data.Pizza>();
+            var junctions = GetJunctions(orderId);
+
+            foreach(var item in junctions)
+            {
+                pizzas.Add(item.Pizza);
+            }
+            return pizzas;
+        }
+
+        public Data.Orders GetOrderById(int orderId)
+        {
+            var order = _db.Orders.Include(x => x.Location).Include(x => x.User).FirstOrDefault(x => x.Id == orderId);
+            return order;
+        }
+
         public void Save()
         {
             _db.SaveChanges();

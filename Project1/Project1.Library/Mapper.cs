@@ -27,8 +27,7 @@ namespace Project1.Library
             LastName = user.LastName,
             LocationId = locationId
         };
-
-
+        
         public static Location Map(Data.Locations location) => new Location
         {
             Name = location.LocationName,

@@ -1,0 +1,16 @@
+﻿@model Project1.WebApp.Models.UserW
+
+@*@using Project1.WebApp.Models;*@
+
+@{
+    ViewData["Title"] = "User Options";
+}
+
+<h2>User Options</h2>
+
+<h1>Welcome back @Html.DisplayFor(modelItem => Model.FirstName) @Html.DisplayFor(modelItem => Model.LastName)</h1>
+<p>Your default location for ordering is @Html.DisplayFor(modelItem => Model.DefaultLocation)</p>
+<p>@Html.ActionLink("Your Order History", "UserHistory", new { id = Model.Id })</p>
+<p>@Html.ActionLink("Make a new order", "NewOrder", new { id = Model.Id })</p>
+
+
