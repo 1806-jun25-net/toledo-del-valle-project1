@@ -31,5 +31,35 @@ namespace Project1.WebApp.Models
             }
             return pizzaWs;
         }
+
+        public static List<Data.Pizza> Map(List<WebApp.Models.PizzaW> pizzas)
+        {
+            List<Data.Pizza> pizzaDs = new List<Data.Pizza>();
+            foreach (var pizza in pizzas)
+            {
+                pizzaDs.Add(new Data.Pizza
+                {
+                    Size = pizza.Size,
+                    Souce = pizza.Sauce,
+                    Cheese = pizza.Cheese,
+                    ExtraCheese = pizza.ExtraCheese,
+                    Pepperoni = pizza.Pepperoni
+                });
+            }
+            return pizzaDs;
+        }
+
+        public static Data.Orders Map(OrderW orderWeb, int locationId)
+        {
+            Data.Orders orderD = new Data.Orders
+            {
+                LocationId = locationId,
+                NumberOfPizzas = orderWeb.Pizzas.Count,
+                OrderTime = orderWeb.TimeOfOrder,
+                UserId = orderWeb.User.Id                
+            };
+            return orderD;
+        }
+                
     }    
 }

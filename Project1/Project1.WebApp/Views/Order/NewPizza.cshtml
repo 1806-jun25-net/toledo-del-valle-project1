@@ -4,17 +4,39 @@
     ViewData["Title"] = "NewPizza";
 }
 
+<script>
+    function validateForm() {
+        var x = document.forms["NewPizza"]["Size"].value;
+        if (x < 1 || x > 3) {
+            alert("Size must be between 1 and 3");
+            return false;
+        }
+    }
+
+    function ckChange() {
+        var cheeseE = document.getElementById("Cheese");
+        var extraCheeseE = document.getElementById("ExtraCheese");
+
+        if (cheeseE.checked) {
+            extraCheeseE.disabled = false;
+        }
+        else {
+            extraCheeseE.checked = false;
+            extraCheeseE.disabled = true;
+        }
+    }
+</script>
+
 <h2>New Pizza</h2>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="NewPizza">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+        <form name="NewPizza" asp-action="NewPizza" onsubmit="return validateForm()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
             <div class="form-group">
                 <label asp-for="Size" class="control-label"></label>
-                <input asp-for="Size" class="form-control" />
+                <input asp-for="Size" class="form-control" name="Size"/>
                 <span asp-validation-for="Size" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,14 +49,14 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="Cheese" /> @Html.DisplayNameFor(model => model.Cheese)
+                        <input asp-for="Cheese" onclick="ckChange()" id="Cheese"/> @Html.DisplayNameFor(model => model.Cheese)
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="ExtraCheese" /> @Html.DisplayNameFor(model => model.ExtraCheese)
+                        <input asp-for="ExtraCheese" id="ExtraCheese" disabled/> @Html.DisplayNameFor(model => model.ExtraCheese)
                     </label>
                 </div>
             </div>

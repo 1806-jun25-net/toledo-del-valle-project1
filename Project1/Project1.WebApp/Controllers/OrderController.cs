@@ -147,7 +147,6 @@ namespace Project1.WebApp.Controllers
                     string orderName = orderWeb.User.Id + "newOrder";
                     TempData.Put("orderName", orderName);
                     TempData.Put(orderName, orderWeb);
-                    //return RedirectToAction("UserOptions", "Order", new { id = user.Id });
                     return RedirectToAction(nameof(UserOptions), new { newOrder = orderWeb.User.Id + "newOrder" });
                 }
                 //return RedirectToAction(nameof(Index)); 
@@ -216,11 +215,42 @@ namespace Project1.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult NewOrder(OrderW webOrder, IFormCollection collection)
         {
+            // get all of the data from TempData and collection
             var location = collection["Location"];
-            var orderName = TempData.Get<String>("orderNamen");
+            var orderName = TempData.Get<String>("orderName");
             var orderWeb = TempData.Get<OrderW>(orderName);
+            List<Data.Pizza> pizzas = OrderW.Map(orderWeb.Pizzas);
+            // Assign values to the location and time of the order
             orderWeb.LocationName = location;
-            return View();
+            orderWeb.TimeOfOrder = DateTime.Now;
+            // Get the id of the location 
+            int locationId = Repo.GetLocationId(location);
+            // Make an Data.Orders object to insert into the db
+            Data.Orders orderD = OrderW.Map(orderWeb, locationId);
+            // Add order to the db
+            Repo.AddOrder(orderD);
+            // save changes in the db
+            Repo.Save();
+            // Get the id of the order
+            int orderId = Repo.GetOrderId(orderD);
+            // Get the id of all the pizzas in the order (create a new pizza entry in the db if it doesn't exist)
+            List<int> pizzaIds = Repo.AddPizzas(pizzas); 
+            // Add data to the junction table
+            foreach(var item in pizzaIds)
+            {
+                Repo.AddPizzaOrders(orderId, item);
+            }
+            // Save changes to the db
+            Repo.Save();
+            // Get the price of the order
+            decimal price = Location.OrderPrice(pizzas);
+            // Place the id and price in the orderWeb obj
+            orderWeb.Id = orderId;
+            orderWeb.Price = price;            
+            // Insert the data into TempData to get it in the OrderReview
+            TempData.Put("orderName", orderName);
+            TempData.Put(orderName, orderWeb);
+            return RedirectToAction(nameof(OrderReview), new { id = orderWeb.User.Id });
         }
         
         public ActionResult NewPizza()
@@ -239,6 +269,16 @@ namespace Project1.WebApp.Controllers
             TempData.Put(orderName, orderWeb);
             return RedirectToAction(nameof(NewOrder), new { newOrder = orderName });
         }
+
+        public ActionResult OrderReview(int id)
+        {
+            var orderName = TempData.Get<string>("orderName");
+            var orderMade = TempData.Get<OrderW>(orderName);
+            orderMade.User.Id = id;
+            //TempData.Put("orderName", orderName);
+            //TempData.Put(orderName, orderMade);
+            return View(orderMade);
+        }
     }// end of Order Controller
 
     // Used to store our objects in TempData
@@ -256,5 +296,4 @@ namespace Project1.WebApp.Controllers
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
     }
-
 }

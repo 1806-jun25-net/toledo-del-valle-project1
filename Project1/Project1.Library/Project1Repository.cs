@@ -123,8 +123,15 @@ namespace Project1.Library
         // Gets the id of an order
         public int GetOrderId(Order order)
         {
-            var orderTime = _db.Orders.FirstOrDefault(x => DateTime.Compare(x.OrderTime,order.TimeOfOrder) == 0).Id;
-            return orderTime;
+            var orderId = _db.Orders.FirstOrDefault(x => DateTime.Compare(x.OrderTime,order.TimeOfOrder) == 0).Id;
+            return orderId;
+        }
+
+        // Gets the id of an order
+        public int GetOrderId(Orders order)
+        {
+            var orderId = _db.Orders.FirstOrDefault(x => DateTime.Compare(x.OrderTime, order.OrderTime) == 0).Id;
+            return orderId;
         }
 
         // Updates a user
@@ -151,7 +158,13 @@ namespace Project1.Library
             _db.Add(Mapper.Map(order, userId, locationId));
         }
 
-        // Adds pizzas to the db
+        // Adds order to the db
+        public void AddOrder(Orders order)
+        {
+            _db.Add(order);
+        }
+
+        // Adds pizzas to the db and returns the ids of the inserted pizzas
         public List<int> AddPizzas(List<Pizza> pizzas)
         {
             List<int> PizzaIds = new List<int>();
@@ -172,10 +185,38 @@ namespace Project1.Library
             return PizzaIds;
         }
 
+        // Adds pizzas to the db and returns the ids of the inserted pizzas
+        public List<int> AddPizzas(List<Data.Pizza> pizzas)
+        {
+            List<int> PizzaIds = new List<int>();
+            foreach (var item in pizzas)
+            {
+                var pizza = _db.Pizza.FirstOrDefault(x => x.Size == item.Size && x.Souce == item.Souce && x.Cheese == item.Cheese && x.ExtraCheese == item.ExtraCheese && x.Pepperoni == item.Pepperoni);
+                if (pizza == null)
+                {
+                    _db.Add(item);
+                    Save();
+                    PizzaIds.Add(GetPizzaId(item));
+                }
+                else
+                {
+                    PizzaIds.Add(GetPizzaId(item));
+                }
+            }
+            return PizzaIds;
+        }
+
         // Gets the id of a pizza
         public int GetPizzaId(Pizza pizza)
         {
             var pizzaId = _db.Pizza.FirstOrDefault(x => x.Size == pizza.Size && x.Souce == pizza.Sauce && x.Cheese == pizza.Cheese && x.ExtraCheese == pizza.ExtraCheese && x.Pepperoni == pizza.Pepperoni).Id;
+            return pizzaId;
+        }
+
+        // Gets the id of a pizza
+        public int GetPizzaId(Data.Pizza pizza)
+        {
+            var pizzaId = _db.Pizza.FirstOrDefault(x => x.Size == pizza.Size && x.Souce == pizza.Souce && x.Cheese == pizza.Cheese && x.ExtraCheese == pizza.ExtraCheese && x.Pepperoni == pizza.Pepperoni).Id;
             return pizzaId;
         }
 
