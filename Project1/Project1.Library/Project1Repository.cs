@@ -146,6 +146,12 @@ namespace Project1.Library
             _db.Entry(_db.Locations.FirstOrDefault(x => x.LocationName == location.Name)).CurrentValues.SetValues(Mapper.Map(location, GetLocationId(location.Name)));
         }
 
+        // Updates a location
+        public void UpdateLocation(Locations location)
+        {
+            _db.Entry(_db.Locations.FirstOrDefault(x => x.LocationName == location.LocationName)).CurrentValues.SetValues(location);
+        }
+
         // Adds user to the db
         public void AddUser(User user)
         {            
