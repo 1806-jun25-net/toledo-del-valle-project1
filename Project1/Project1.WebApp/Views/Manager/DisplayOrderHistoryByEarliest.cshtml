@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Project1.WebApp.Models.OrderW>
+
+@{
+    ViewData["Title"] = "Order History By Earliest";
+}
+
+
+<h2>Order History By Earliest</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfOrder)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeOfOrder)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "OrderDetailsEarliest", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.ActionLink("Return to Manager Options", "ManagerOptions") <br />

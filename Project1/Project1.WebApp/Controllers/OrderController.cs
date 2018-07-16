@@ -110,14 +110,65 @@ namespace Project1.WebApp.Controllers
             }
         }
 
-        public ActionResult MakeOrder()
+        public ActionResult CreateUser()
         {
-            UserW webUser = new UserW();
-            return View(webUser);
+            return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateUser(UserW userWeb)
+        {
+            try
+            {
+                var user = Repo.GetUser(userWeb.FirstName, userWeb.LastName);
+                if (user == null)
+                {
+                    Users newUser = new Users
+                    {
+                        FirstName = userWeb.FirstName,
+                        LastName = userWeb.LastName,
+                        LocationId = 1
+                    };
 
-                
+                    Repo.AddUser(newUser);
+                    Repo.Save();
+                    var userD = Repo.GetUser(newUser.FirstName, newUser.LastName);
+
+                    OrderW orderWeb = new OrderW
+                    {
+                        LocationName = userD.Location.LocationName,
+                        User = new UserW
+                        {
+                            Id = userD.Id,
+                            FirstName = userD.FirstName,
+                            LastName = userD.LastName,
+                            DefaultLocation = userD.Location.LocationName
+                        },
+                        Pizzas = new List<PizzaW>()
+                    };
+                    string orderName = orderWeb.User.Id + "newOrder";
+                    TempData.Put("orderName", orderName);
+                    TempData.Put(orderName, orderWeb);
+                    return RedirectToAction(nameof(UserOptions), new { newOrder = orderWeb.User.Id + "newOrder" });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "User already exist");
+                    return View();
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult MakeOrder()
+        {
+            return View();
+        }             
+
         // POST: Order/MakeOrder
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -128,7 +179,7 @@ namespace Project1.WebApp.Controllers
                 var user = Repo.GetUser(webUser.FirstName, webUser.LastName);
                 if(user == null)
                 {
-                    ModelState.AddModelError("", "User does not exist");
+                    ModelState.AddModelError("", "User doesn't exist");
                     return View();
                 }
                 else
@@ -167,6 +218,7 @@ namespace Project1.WebApp.Controllers
 
         public ActionResult UserHistory(int id)
         {
+            var user = Repo.GetUserById(id);
             var orders = Repo.GetUserOrders(id);
 
             var UserOrders = orders.Select(x => new OrderW
@@ -182,6 +234,11 @@ namespace Project1.WebApp.Controllers
                 Pizzas = OrderW.Map(Repo.GetPizzasFromOder(x.Id)),
                 TimeOfOrder = x.OrderTime
             });
+
+            TempData["Id"] = "" + id;
+            TempData["FirstName"] = user.FirstName;
+            TempData["LastName"] = user.LastName;
+
             return View(UserOrders);
         }
 
@@ -296,7 +353,9 @@ namespace Project1.WebApp.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(NewOrder), new { newOrder = orderName });
+                ModelState.AddModelError("", "Sorry but that location does not have enough ingridients to complete your order");
+                return NewOrder(orderName);
+                //return RedirectToAction(nameof(NewOrder), new { newOrder = orderName });
             }
         }
         
@@ -340,7 +399,7 @@ namespace Project1.WebApp.Controllers
         }
     }// end of Order Controller
 
-    // Used to store our objects in TempData
+    // Used to store complex objects in TempData
     public static class TempDataExtensions
     {
         public static void Put<T>(this ITempDataDictionary tempData, string key, T value) where T : class

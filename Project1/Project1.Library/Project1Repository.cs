@@ -78,11 +78,11 @@ namespace Project1.Library
         public Users GetUser(string firstName, string lastName)
         {
             var user = _db.Users.Include(x => x.Location).FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
-            if (user == null)
-            {
-                string name = firstName + " " + lastName;
-                throw new ArgumentException("no such user with that name", nameof(name));
-            }
+            //if (user == null)
+            //{
+            //    string name = firstName + " " + lastName;
+            //    throw new ArgumentException("no such user with that name", nameof(name));
+            //}
             return user;
         }
 
@@ -102,10 +102,16 @@ namespace Project1.Library
         public Locations GetLocation(string locationName)
         {
             var location = _db.Locations.FirstOrDefault(x => x.LocationName == locationName);
-            if (location == null)
-            {
-                throw new ArgumentException("no such location with that name", nameof(locationName));
-            }
+            //if (location == null)
+            //{
+            //    throw new ArgumentException("no such location with that name", nameof(locationName));
+            //}
+            return location;
+        }
+
+        public Locations GetLocationById(int id)
+        {
+            var location = _db.Locations.FirstOrDefault(x => x.Id == id);
             return location;
         }
 
@@ -156,6 +162,12 @@ namespace Project1.Library
         public void AddUser(User user)
         {            
             _db.Add(Mapper.Map(user, GetLocationId(user.LocationName)));
+        }
+
+        // Adds user to the db
+        public void AddUser(Users user)
+        {
+            _db.Add(user);
         }
 
         // Adds order to the db
@@ -251,15 +263,21 @@ namespace Project1.Library
             return order;
         }
 
+        public List<Orders> GetOrdersFromLocation(int id)
+        {
+            var orders = _db.Orders.Where(x => x.LocationId == id).Include(x => x.User).Include(x => x.Location).ToList();
+            return orders;
+        }
+
         public List<Orders> GetAllOrdersEarliest()
         {
-            var orders = _db.Orders.Include(x => x.Location).OrderBy(x => x.OrderTime).ToList();
+            var orders = _db.Orders.Include(x => x.User).Include(x => x.Location).OrderBy(x => x.OrderTime).ToList();
             return orders;
         }
 
         public List<Orders> GetAllOrdersLatest()
         {
-            var orders = _db.Orders.Include(x => x.Location).OrderByDescending(x => x.OrderTime).ToList();
+            var orders = _db.Orders.Include(x => x.User).Include(x => x.Location).OrderByDescending(x => x.OrderTime).ToList();
             return orders;
         }
 
