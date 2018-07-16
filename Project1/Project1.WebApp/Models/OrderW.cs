@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,9 +9,11 @@ namespace Project1.WebApp.Models
     public class OrderW
     {
         public int Id { get; set; }
+        [Display(Name = "Location Name")]
         public string LocationName { get; set; }
         public UserW User { get; set; }
         public List<PizzaW> Pizzas { get; set; }
+        [Display(Name = "Order Time")]
         public DateTime TimeOfOrder { get; set; }
         public Decimal Price { get; set; }
 

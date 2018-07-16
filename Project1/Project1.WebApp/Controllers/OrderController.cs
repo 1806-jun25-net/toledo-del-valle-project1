@@ -280,7 +280,19 @@ namespace Project1.WebApp.Controllers
             var orderName = TempData.Get<String>("orderName");
             var orderWeb = TempData.Get<OrderW>(orderName);
 
-            timeSpan = DateTime.Now.Subtract(Repo.GetLastOrderFromLocation(orderWeb.User.Id, location).OrderTime);
+            TempData.Put("orderName", orderName);
+            TempData.Put(orderName, orderWeb);
+
+            try
+            {
+                timeSpan = DateTime.Now.Subtract(Repo.GetLastOrderFromLocation(orderWeb.User.Id, location).OrderTime);
+            }
+            catch(Exception E)
+            {
+                TimeSpan time1 = TimeSpan.FromHours(1);
+                TimeSpan ts = DateTime.Now.TimeOfDay;
+                timeSpan = ts.Add(time1);
+            }
 
             if (timeSpan.Hours >= 2) {
                 // Place the orderName and Order in the TempData in case the order cannnot be completed
@@ -358,6 +370,7 @@ namespace Project1.WebApp.Controllers
                 }
                 else
                 {
+
                     ModelState.AddModelError("", "Sorry but that location does not have enough ingridients to complete your order");
                     return NewOrder(orderName);
                     //return RedirectToAction(nameof(NewOrder), new { newOrder = orderName });
