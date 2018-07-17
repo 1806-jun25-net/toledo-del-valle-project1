@@ -53,13 +53,13 @@ namespace Project1.Library
             foreach(var pizza in order.Pizza)
             {
                 price += pizza.Size * 5.00M;
-                if (pizza.Sauce == true) { price += pizza.Size * .99M; }
-                if (pizza.Cheese == true)
+                if (pizza.Sauce) { price += pizza.Size * .99M; }
+                if (pizza.Cheese)
                 {
                     price += pizza.Size * .99M;
-                    if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+                    if (pizza.ExtraCheese) { price += pizza.Size * .99M; }
                 }                
-                if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
+                if (pizza.Pepperoni) { price += pizza.Size * .99M; }
             }
             return price;
         }
@@ -87,13 +87,13 @@ namespace Project1.Library
             decimal price;
             price = 0;
             price += pizza.Size * 5.00M;
-            if (pizza.Sauce == true) { price += pizza.Size * .99M; }
-            if (pizza.Cheese == true)
+            if (pizza.Sauce) { price += pizza.Size * .99M; }
+            if (pizza.Cheese)
             {
                 price += pizza.Size * .99M;
-                if (pizza.ExtraCheese == true) { price += pizza.Size * .99M; }
+                if (pizza.ExtraCheese) { price += pizza.Size * .99M; }
             }
-            if (pizza.Pepperoni == true) { price += pizza.Size * .99M; }
+            if (pizza.Pepperoni) { price += pizza.Size * .99M; }
             return price;
         }
 
@@ -106,19 +106,19 @@ namespace Project1.Library
             foreach(var pizza in pizzas)
             {
                 dough += pizza.Size;
-                if (pizza.Sauce == true)
+                if (pizza.Sauce)
                 {
                     sauce += pizza.Size;
                 }
-                if (pizza.Cheese == true)
+                if (pizza.Cheese)
                 {
                     cheese += pizza.Size;
                 }
-                if (pizza.ExtraCheese == true)
+                if (pizza.ExtraCheese)
                 {
                     cheese += pizza.Size;
                 }
-                if (pizza.Pepperoni == true)
+                if (pizza.Pepperoni)
                 {
                     pepperoni += pizza.Size;
                 }

@@ -20,10 +20,6 @@ namespace Project1.Library
             LastName = lastName;
             LocationName = locationName;
         }
-
-        public void PlaceOrder()
-        {
-        }
         
 
         public static bool Equals(User a, User b) => (a.FirstName == b.FirstName && a.LastName == b.LastName) ? true : false;
