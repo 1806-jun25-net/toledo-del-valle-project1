@@ -201,7 +201,6 @@ namespace Project1.WebApp.Controllers
                     TempData.Put(orderName, orderWeb);
                     return RedirectToAction(nameof(UserOptions), new { newOrder = orderWeb.User.Id + "newOrder" });
                 }
-                //return RedirectToAction(nameof(Index)); 
             }
             catch
             {
